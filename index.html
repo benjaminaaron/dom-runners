@@ -16,6 +16,8 @@
         </div>
         <script>
         
+        var cellsize = 50;
+        
         html2canvas(document.body, {
             //allowTaint: true,
             onrendered: function(canvas) {
@@ -29,8 +31,26 @@
                 document.body.appendChild(demoCanvas);
                 
                 demoCanvas.getContext('2d').putImageData(markWhitePixels(imgData), 0, 0);
+                
+                drawCells(demoCanvas)
             }
         });
+        
+        function drawCells(canvas) {
+            var ctx = canvas.getContext('2d');
+            // horizontals
+            for(var x = 0; x < canvas.width; x += cellsize) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            // verticals
+            for(var y = 0; y < canvas.height; y += cellsize) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
         
         function markWhitePixels(imgData) {
             for (var i = 0; i < imgData.data.length; i += 4) {
