@@ -18,7 +18,7 @@
         </div>
         <script>
         
-        var cellsize = 50;
+        var cellsize = 40;
         var map;
         
         html2canvas(document.body, {
@@ -33,35 +33,14 @@
                 demoCanvas.height = canvas.height;
                 document.body.appendChild(demoCanvas);
                 
-                demoCanvas.getContext('2d').putImageData(markWhitePixels(imgData), 0, 0);
+                demoCanvas.getContext('2d').putImageData(imgData, 0, 0);
                 
                 map = new Map(cellsize, demoCanvas);
+                map.identifyCellTypes(ctx);
                 map.drawCells();
+                map.drawGrid();
             }
         });
-        
-        function markWhitePixels(imgData) {
-            for (var i = 0; i < imgData.data.length; i += 4) {
-                if(imgData.data[i + 3] == 0) { // we're not actually looking for white pixel but those with zero alpha
-                    imgData.data[i] = 255;
-                    imgData.data[i + 1] = 255;
-                    imgData.data[i + 2] = 0;
-                    imgData.data[i + 3] = 255;
-                }    
-            }
-            return imgData;
-        }
-        
-        /*
-        function invertColor(imgData) {
-            for (var i = 0; i < imgData.data.length; i += 4) {
-                imgData.data[i] = 255 - imgData.data[i];
-                imgData.data[i+1] = 255 - imgData.data[i+1];
-                imgData.data[i+2] = 255 - imgData.data[i+2];
-                imgData.data[i+3] = 255;
-            }
-            return imgData;
-        }*/
         
         </script>
     </body>

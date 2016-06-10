@@ -10,15 +10,22 @@ var Map = function(cellsize, canvas) {
 
 Map.prototype = {
     initCells: function() {
+        this.loopTroughCells(function(row, col) {
+            this.cells.push(new Cell(row, col, this.cellsize));
+       }.bind(this));
+    },
+    
+    loopTroughCells(callback) {
         for(var row = 0; row < this.rows; row ++) {
             for(var col = 0; col < this.cols; col ++) {
-                this.cells.push(new Cell(row, col, this.cellsize));
+                callback(row, col);
             }
         }
     },
     
-    drawCells: function() {
+    drawGrid: function() {
         var ctx = this.canvas.getContext('2d');
+        ctx.strokeStyle = "#999999";
         var width = this.cols * cellsize;
         var height = this.rows * cellsize;
         // horizontals
@@ -33,5 +40,23 @@ Map.prototype = {
             ctx.lineTo(width, y);
             ctx.stroke();
         }
-    }
+    },
+    
+    identifyCellTypes: function(screenshotCtx) {
+        this.loopTroughCells(function(row, col) {
+            this.getCell(row, col).identifyType(screenshotCtx);
+       }.bind(this));
+   },
+   
+   getCell: function(row, col) {
+       return this.cells[this.cols * row + col];
+   },
+   
+   drawCells: function() {
+       var ctx = this.canvas.getContext('2d');
+       ctx.fillStyle = "#FFFF00";
+       this.loopTroughCells(function(row, col) {
+           this.getCell(row, col).draw(ctx);
+      }.bind(this));
+   }
 };
