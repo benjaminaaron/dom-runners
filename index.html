@@ -7,7 +7,14 @@
         <script src='js/Map.js'></script>
         <script src='js/Cell.js'></script>
         <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
-        <style></style>
+        <style>
+            #backgroundCanvas {
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: -1;
+            }
+        </style>
     </head>
     <body>
         <div align="center">
@@ -20,27 +27,31 @@
         <script>
         
         var cellsize = 20;
+        var canvas; // background canvas
         var map;
-        //var height = $(document).height();
+        //var height = $(document.body).height(); // to restrict the height to the lowest dom-element
         
         html2canvas(document.body, {
             //allowTaint: true,
-            onrendered: function(canvas) {
+            onrendered: function(canvasRet) {
                 //document.body.appendChild(canvas);
+                var imgData = canvasRet.getContext('2d').getImageData(0, 0, canvasRet.width, canvasRet.height);
+                
+                canvas = document.createElement('canvas');
+                canvas.id = 'backgroundCanvas';
+                canvas.width = imgData.width;
+                canvas.height = imgData.height;
+                //backgroundCanvas.getContext('2d').putImageData(imgData, 0, 0);
+                document.body.appendChild(canvas);
+                
                 var ctx = canvas.getContext('2d');
-                var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                
-                var demoCanvas = document.createElement('canvas');
-                demoCanvas.width = canvas.width;
-                demoCanvas.height = canvas.height;
-                document.body.appendChild(demoCanvas);
-                
-                demoCanvas.getContext('2d').putImageData(imgData, 0, 0);
-                
-                map = new Map(cellsize, demoCanvas);
+                var rows = Math.floor(canvas.height / cellsize);
+                var cols = Math.floor(canvas.width / cellsize);
+
+                map = new Map(cellsize, rows, cols);
                 map.initCells(imgData);
-                map.drawCells();
-                map.drawGrid();
+                map.drawCells(ctx);
+                map.drawGrid(ctx);
             }
         });
         

@@ -1,9 +1,9 @@
 
-var Map = function(cellsize, canvas) {
+var Map = function(cellsize, rows, cols) {
     this.cellsize = cellsize;
     this.canvas = canvas;
-    this.cols = Math.floor(canvas.width / cellsize);
-    this.rows = Math.floor(canvas.width / cellsize);
+    this.rows = rows;
+    this.cols = cols;
     this.cells = [];
 };
 
@@ -37,8 +37,7 @@ Map.prototype = {
         }
     },
     
-    drawGrid: function() {
-        var ctx = this.canvas.getContext('2d');
+    drawGrid: function(ctx) {
         ctx.strokeStyle = "#999999";
         var width = this.cols * cellsize;
         var height = this.rows * cellsize;
@@ -60,8 +59,7 @@ Map.prototype = {
        return this.cells[this.cols * row + col];
    },
    
-   drawCells: function() {
-       var ctx = this.canvas.getContext('2d');
+   drawCells: function(ctx) {
        ctx.fillStyle = "#FFFF00";
        this.loopTroughCells(function(row, col) {
            this.getCell(row, col).draw(ctx);
