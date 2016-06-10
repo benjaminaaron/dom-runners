@@ -4,6 +4,7 @@
         <title>dom-runners</title>
         <script src='js/vendors/html2canvas.js'></script>
         <!--<script src='http://code.jquery.com/jquery.min.js'></script>-->
+        <script src='js/main.js'></script>
         <script src='js/Map.js'></script>
         <script src='js/Cell.js'></script>
         <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
@@ -31,29 +32,15 @@
         var map;
         //var height = $(document.body).height(); // to restrict the height to the lowest dom-element
         
-        html2canvas(document.body, {
-            //allowTaint: true,
-            onrendered: function(canvasRet) {
-                //document.body.appendChild(canvas);
-                var imgData = canvasRet.getContext('2d').getImageData(0, 0, canvasRet.width, canvasRet.height);
-                
-                canvas = document.createElement('canvas');
-                canvas.id = 'backgroundCanvas';
-                canvas.width = imgData.width;
-                canvas.height = imgData.height;
-                //backgroundCanvas.getContext('2d').putImageData(imgData, 0, 0);
-                document.body.appendChild(canvas);
-                
-                var ctx = canvas.getContext('2d');
-                var rows = Math.floor(canvas.height / cellsize);
-                var cols = Math.floor(canvas.width / cellsize);
-
-                map = new Map(cellsize, rows, cols);
-                map.initCells(imgData);
-                map.drawCells(ctx);
-                map.drawGrid(ctx);
-            }
-        });
+        initMap();
+        
+        var resizeId;
+        window.onresize = function(event) {
+            clearTimeout(resizeId);
+            resizeId = setTimeout(function() {
+                initMap();
+            }, 200);
+        };
         
         </script>
     </body>
