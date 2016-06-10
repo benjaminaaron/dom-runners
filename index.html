@@ -2,19 +2,59 @@
 <html>
     <head>
         <title>dom-runners</title>
-        <!-- <script src='main.js'></script>
-        <link rel="stylesheet" type="text/css" href="main.css"> -->
+        <script src='js/html2canvas.js'></script>
+        <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
         <style></style>
     </head>
     <body>
         <div align="center">
             <br><br>
             <img src="img.jpg">
-            <h1>some header</h1>
+            <h1 id="h1el">some header</h1>
             <p>some text...</p>
+            <hr>
         </div>
         <script>
-            // ...
+        
+        html2canvas(document.body, {
+            //allowTaint: true,
+            onrendered: function(canvas) {
+                //document.body.appendChild(canvas);
+                var ctx = canvas.getContext('2d');
+                var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                var demoCanvas = document.createElement('canvas');
+                demoCanvas.width = canvas.width;
+                demoCanvas.height = canvas.height;
+                document.body.appendChild(demoCanvas);
+                
+                demoCanvas.getContext('2d').putImageData(markWhitePixels(imgData), 0, 0);
+            }
+        });
+        
+        function markWhitePixels(imgData) {
+            for (var i = 0; i < imgData.data.length; i += 4) {
+                if(imgData.data[i + 3] == 0) { // we're not actually looking for white pixel but those with zero alpha
+                    imgData.data[i] = 255;
+                    imgData.data[i + 1] = 255;
+                    imgData.data[i + 2] = 0;
+                    imgData.data[i + 3] = 255;
+                }    
+            }
+            return imgData;
+        }
+        
+        /*
+        function invertColor(imgData) {
+            for (var i = 0; i < imgData.data.length; i += 4) {
+                imgData.data[i] = 255 - imgData.data[i];
+                imgData.data[i+1] = 255 - imgData.data[i+1];
+                imgData.data[i+2] = 255 - imgData.data[i+2];
+                imgData.data[i+3] = 255;
+            }
+            return imgData;
+        }*/
+        
         </script>
     </body>
 </html>
