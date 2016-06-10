@@ -3,6 +3,7 @@
     <head>
         <title>dom-runners</title>
         <script src='js/vendors/html2canvas.js'></script>
+        <!--<script src='http://code.jquery.com/jquery.min.js'></script>-->
         <script src='js/Map.js'></script>
         <script src='js/Cell.js'></script>
         <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
@@ -18,8 +19,9 @@
         </div>
         <script>
         
-        var cellsize = 40;
+        var cellsize = 20;
         var map;
+        //var height = $(document).height();
         
         html2canvas(document.body, {
             //allowTaint: true,
@@ -36,7 +38,7 @@
                 demoCanvas.getContext('2d').putImageData(imgData, 0, 0);
                 
                 map = new Map(cellsize, demoCanvas);
-                map.identifyCellTypes(ctx);
+                map.initCells(imgData);
                 map.drawCells();
                 map.drawGrid();
             }

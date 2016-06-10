@@ -5,14 +5,28 @@ var Map = function(cellsize, canvas) {
     this.cols = Math.floor(canvas.width / cellsize);
     this.rows = Math.floor(canvas.width / cellsize);
     this.cells = [];
-    this.initCells();
 };
 
 Map.prototype = {
-    initCells: function() {
+    initCells: function(imgData) {
         this.loopTroughCells(function(row, col) {
-            this.cells.push(new Cell(row, col, this.cellsize));
+            this.cells.push(new Cell(row, col, this.cellsize, this.hasOnlyWhitePixels(row, col, imgData)));
        }.bind(this));
+    },
+    
+    hasOnlyWhitePixels: function(row, col, imgData) { // imgData.data is a 1-dim-array (rows next to each other) of the pixels, where each pixel has 4 entries (rgba)
+        var yStart = row * this.cellsize;
+        var yEnd = yStart + this.cellsize;
+        for(var y = yStart; y < yEnd; y ++) {
+            var indexStart = 4 * (y * imgData.width + col * this.cellsize);
+            var indexEnd = indexStart + 4 * this.cellsize;
+            for(var index = indexStart; index < indexEnd; index ++) {
+                if (imgData.data[index + 3] != 0) { // only check the alpha-value
+                    return false;
+                }
+            }
+        }
+        return true;
     },
     
     loopTroughCells(callback) {
@@ -41,12 +55,6 @@ Map.prototype = {
             ctx.stroke();
         }
     },
-    
-    identifyCellTypes: function(screenshotCtx) {
-        this.loopTroughCells(function(row, col) {
-            this.getCell(row, col).identifyType(screenshotCtx);
-       }.bind(this));
-   },
    
    getCell: function(row, col) {
        return this.cells[this.cols * row + col];
