@@ -3,6 +3,8 @@
     <head>
         <title>dom-runners</title>
         <script src='js/vendors/html2canvas.js'></script>
+        <script src='js/Map.js'></script>
+        <script src='js/Cell.js'></script>
         <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
         <style></style>
     </head>
@@ -17,6 +19,7 @@
         <script>
         
         var cellsize = 50;
+        var map;
         
         html2canvas(document.body, {
             //allowTaint: true,
@@ -32,25 +35,10 @@
                 
                 demoCanvas.getContext('2d').putImageData(markWhitePixels(imgData), 0, 0);
                 
-                drawCells(demoCanvas)
+                map = new Map(cellsize, demoCanvas);
+                map.drawCells();
             }
         });
-        
-        function drawCells(canvas) {
-            var ctx = canvas.getContext('2d');
-            // horizontals
-            for(var x = 0; x < canvas.width; x += cellsize) {
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-            // verticals
-            for(var y = 0; y < canvas.height; y += cellsize) {
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-        }
         
         function markWhitePixels(imgData) {
             for (var i = 0; i < imgData.data.length; i += 4) {
