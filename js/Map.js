@@ -20,7 +20,7 @@ Map.prototype = {
         for(var y = yStart; y < yEnd; y ++) {
             var indexStart = 4 * (y * imgData.width + col * this.cellsize);
             var indexEnd = indexStart + 4 * this.cellsize;
-            for(var index = indexStart; index < indexEnd; index ++) {
+            for(var index = indexStart; index < indexEnd; index += 2 * 4) {
                 if (imgData.data[index + 3] != 0) { // only check the alpha-value
                     return false;
                 }
