@@ -98,12 +98,14 @@ Map.prototype = {
         var height = this.rows * cellsize;
         // horizontals
         for(var x = 0; x <= width; x += cellsize) {
+            ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x, height);
             ctx.stroke();
         }
         // verticals
         for(var y = 0; y <= height; y += cellsize) {
+            ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(width, y);
             ctx.stroke();
