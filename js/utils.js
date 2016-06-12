@@ -17,11 +17,11 @@ function getCellColor(type) {
         case CellType.TEMPOBSTACLE:
             return debugMode ? '#AAA' : '#FFF';
         case CellType.ORIGIN:
-            return '#00FF00';
-        case CellType.DESTINATION:
             return '#FF0000';
+        case CellType.DESTINATION:
+            return '#0000FF';
         case CellType.AGENT:
-            return '#444';
+            return '#00FF00';
     }
 }
 

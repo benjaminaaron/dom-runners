@@ -53,10 +53,6 @@ Map.prototype = {
     },
     
     placeMapObjects: function() {
-        var agents = 10;
-        var origins = 3;
-        var destinations = 2;
-        
         // agents
         for(var i = 0; i < agents; i ++)
             this.addRandomAgent();
@@ -71,7 +67,7 @@ Map.prototype = {
         
         var destinationIDs = Array.apply(null, {length: this.destinations.length}).map(Number.call, Number); // via stackoverflow.com/a/20066663
         this.wireAgentsToDestinations(destinationIDs);
-        this.configureOrigins(destinationIDs, 5, 10);
+        this.configureOrigins(destinationIDs);
         
         /*this.addAgent(this.getCell(8, 6));
         this.addAgent(this.getCell(10, 10));
@@ -109,9 +105,9 @@ Map.prototype = {
             this.agents[i].targetDestinationId = getRandomElement(destinationIDs);
     },
     
-    configureOrigins: function(destinationIDs, minSpawnLimit, maxSpawnLimit) {
+    configureOrigins: function(destinationIDs) {
         for(var i in this.origins) {
-            this.origins[i].spawnLimit = getRandomIntBetween(minSpawnLimit, maxSpawnLimit);
+            this.origins[i].spawnLimit = getRandomIntBetween(spawnSpan[0], spawnSpan[1]);
             this.origins[i].possibleTargetDestinationIDs = destinationIDs; // TODO allow (random) subsets of that
         }
     },

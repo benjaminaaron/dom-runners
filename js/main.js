@@ -1,10 +1,24 @@
 
-var cellsize = 10;
-var simStepPause = 100; // ms
-var mouseClusterRings = 2;
+var cellsize = 6;
+var simStepPause = 40; // ms
+var mouseClusterRings = 5;
 
-var debugMode = true;
+var agents = 0;
+var origins = 20;
+var spawnSpan = [10, 50];
+var destinations = 8;
 
+var debugMode = false;
+
+
+document.onmouseup = function (event) {
+    if (map != null)
+        debugMode = !debugMode;
+    else
+        initMap();
+}
+
+var map, sim;
 
 function initMap() {
     var oldCanvas = document.getElementById('backgroundCanvas');
@@ -30,9 +44,9 @@ function initMap() {
             var rows = Math.floor(canvas.height / cellsize);
             var cols = Math.floor(canvas.width / cellsize);
 
-            var map = new Map(rows, cols, imgData, ctx);
-            var simulation = new Simulation(map);
-            simulation.start();
+            map = new Map(rows, cols, imgData, ctx);
+            sim = new Simulation(map);
+            sim.start();
             
             document.onmousemove = function (event) {
                 map.updateMousePos(event.pageX, event.pageY);
