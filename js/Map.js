@@ -56,13 +56,18 @@ Map.prototype = {
         }
     },
    
-   getCell: function(row, col) {
-       return this.cells[this.cols * row + col];
-   },
+    getCell: function(row, col) {
+        return this.cells[this.cols * row + col];
+    },
    
-   drawCells: function(ctx) {
-       this.loopTroughCells(function(row, col) {
-           this.getCell(row, col).draw(ctx);
-      }.bind(this));
-   }
+    drawCells: function(ctx) {
+        this.loopTroughCells(function(row, col) {
+            this.getCell(row, col).draw(ctx);
+        }.bind(this));
+    },
+    
+    placeOriginsAndDestinations: function() {
+        this.getCell(4, 6).type = CellType.ORIGIN;
+        this.getCell(17, 16).type = CellType.DESTINATION;
+    }
 };

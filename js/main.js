@@ -26,6 +26,7 @@ function initMap() {
 
             map = new Map(cellsize, rows, cols);
             map.initCells(imgData);
+            map.placeOriginsAndDestinations();
             map.drawCells(ctx);
             map.drawGrid(ctx);
         }

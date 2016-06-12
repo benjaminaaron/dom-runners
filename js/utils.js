@@ -13,7 +13,7 @@ function getCellColor(type) {
             return '#FFFFFF';
         case CellType.OBSTACLE:
             return '#BBBBBB';
-        case CellType.ORIGN:
+        case CellType.ORIGIN:
             return '#FFFF00';
         case CellType.DESTINATION:
             return '#FF0000';
