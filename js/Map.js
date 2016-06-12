@@ -166,9 +166,7 @@ Map.prototype = {
         for(var i in this.agents) {
             var agent = this.agents[i];
             if (!agent.destinationReached) {
-                var freeNeigbourCells = this.getNeighbourCells(agent.cell, function(cell) {
-                    return cell.isWalkable();
-                });
+                var freeNeigbourCells = this.getFreeNeighbourCells(agent.cell);
                 var chosenCell = null;
                 var minDist = Number.MAX_VALUE;
                 for(var j in freeNeigbourCells) {
@@ -188,12 +186,12 @@ Map.prototype = {
         this.draw();
     },
     
-    getNeighbourCells: function(cell, callback) {
+    getFreeNeighbourCells: function(cell, callback) {
         var freeNeigbourCells = [];
         var dirs = neighbourDirections();
         for(var i in dirs) {
             var neighbourCell = this.getCell(cell.row + dirs[i][0], cell.col + dirs[i][1]);
-            if(neighbourCell != null && callback(neighbourCell))
+            if(neighbourCell != null && neighbourCell.isWalkable())
                 freeNeigbourCells.push(neighbourCell);
         }
         return freeNeigbourCells;
@@ -225,22 +223,31 @@ Map.prototype = {
         var mouseCell = this.getCell(Math.floor(y / cellsize), Math.floor(x / cellsize));
         if (this.lastMouseCell != mouseCell) {
             if(this.lastMouseCell != null) {
-                var oldCluster = this.getCluster(this.lastMouseCell);
+                var oldCluster = this.getCluster(this.lastMouseCell, mouseClusterRings);
                 this.convertCluster(oldCluster, CellType.TEMPOBSTACLE, CellType.FREE);
             }
-            var newCluster = this.getCluster(mouseCell);
+            var newCluster = this.getCluster(mouseCell, mouseClusterRings);
             this.convertCluster(newCluster, CellType.FREE, CellType.TEMPOBSTACLE);
-            
             this.lastMouseCell = mouseCell;
         }
     },
     
-    getCluster(coreCell) {
-        var cluster = this.getNeighbourCells(coreCell, function(cell) {return true;});
-        cluster.push(coreCell);
+    getCluster(core, rings) {
+        var cluster = [];
+        var row = core.row - rings;
+        var col = core.col - rings;
+        for(var i = 0; i <= rings * 2; i ++)
+            for(var j = 0; j <= rings * 2; j ++)
+                this.safeAdd(cluster, row + j, col + i);
         return cluster;
     },
-        
+    
+    safeAdd: function(cluster, row, col) {
+        var cell = this.getCell(row, col);
+        if(cell != null)
+            cluster.push(cell);
+    },
+    
     convertCluster: function(cluster, from, to) {
         for(var i in cluster) {
             var cell = cluster[i];

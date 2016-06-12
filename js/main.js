@@ -1,8 +1,9 @@
 
 var cellsize = 10;
 var simStepPause = 100; // ms
+var mouseClusterRings = 2;
 
-var debugMode = false;
+var debugMode = true;
 
 
 function initMap() {
