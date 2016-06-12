@@ -127,7 +127,7 @@ Map.prototype = {
     },
     
     drawGrid: function(ctx) {
-        ctx.strokeStyle = "#999999";
+        ctx.strokeStyle = "#BBBBBB";
         var width = this.cols * cellsize;
         var height = this.rows * cellsize;
         // horizontals

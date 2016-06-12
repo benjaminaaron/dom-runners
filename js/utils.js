@@ -10,15 +10,15 @@ var CellType = {
 function getCellColor(type) {
     switch(type) {
         case CellType.FREE:
-            return '#FFFFFF';
+            return '#FFF';
         case CellType.OBSTACLE:
-            return '#BBBBBB';
+            return '#CCC';
         case CellType.ORIGIN:
             return '#FFFF00';
         case CellType.DESTINATION:
             return '#FF0000';
         case CellType.AGENT:
-            return '#000000';
+            return '#444';
     }
 }
 
