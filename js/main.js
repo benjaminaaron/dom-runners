@@ -1,9 +1,7 @@
 
 var cellsize = 20;
-var map, simulation;
 
 function initMap() {
-    
     var oldCanvas = document.getElementById('backgroundCanvas');
     if (oldCanvas != null) {
         oldCanvas.parentNode.removeChild(oldCanvas);
@@ -27,8 +25,8 @@ function initMap() {
             var rows = Math.floor(canvas.height / cellsize);
             var cols = Math.floor(canvas.width / cellsize);
 
-            map = new Map(cellsize, rows, cols, imgData, ctx);
-            simulation = new Simulation(map);
+            var map = new Map(cellsize, rows, cols, imgData, ctx);
+            var simulation = new Simulation(map);
             simulation.start();
         }
     });

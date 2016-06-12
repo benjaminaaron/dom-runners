@@ -1,16 +1,11 @@
 
-var Agent = function(id, cell) {
+var Agent = function(id, cell, targetDestinationId) {
     this.id = id;
     this.cell = cell;
-
+    this.targetDestinationId = targetDestinationId;
+    this.destinationReached = false;
 };
 
 Agent.prototype = {
-    makeMove: function(map) {
-        console.log('agent ' + this.id + ' making move');
-        var freeNeigbourCells = map.getFreeNeighbourCells(this.cell);
-        
-        
 
-    }
 };

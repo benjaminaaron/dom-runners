@@ -1,8 +1,7 @@
 
-var Destination = function(id, cell, removeAgentCallback) {
+var Destination = function(id, cell) {
     this.id = id;
     this.cell = cell;
-    this.removeAgentCallback = removeAgentCallback;
 };
 
 Destination.prototype = {

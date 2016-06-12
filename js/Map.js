@@ -5,6 +5,10 @@ var Map = function(cellsize, rows, cols, imgData, ctx) {
     this.cols = cols;
     this.cells = [];
     
+    this.agents = [];
+    this.origins = [];
+    this.destinations = [];
+    
     this.ctx = ctx;
     this.initCells(imgData);
     this.placeMapObjects();
@@ -44,11 +48,29 @@ Map.prototype = {
     
     placeMapObjects: function() {
         //TODO some clever random mechanism
-        this.getCell(8, 6).type = CellType.AGENT;
-        this.getCell(10, 10).type = CellType.AGENT;
-        this.getCell(9, 14).type = CellType.AGENT;
-        this.getCell(4, 6).type = CellType.ORIGIN;
-        this.getCell(17, 16).type = CellType.DESTINATION;
+        this.addAgent(8, 6);
+        this.addAgent(10, 10);
+        this.addAgent(9, 14);
+        this.addOrigin(4, 6);
+        this.addDestination(17, 16);
+    },
+    
+    addAgent: function(row, col) {
+        var cell = this.getCell(row, col);
+        cell.type = CellType.AGENT;
+        this.agents.push(new Agent(this.agents.length, cell, 0));
+    },
+    
+    addOrigin: function(row, col) {
+        var cell = this.getCell(row, col);
+        cell.type = CellType.ORIGIN;
+        this.origins.push(new Origin(this.destinations.length, cell, 0));
+    },
+    
+    addDestination: function(row, col) {
+        var cell = this.getCell(row, col);
+        cell.type = CellType.DESTINATION;
+        this.destinations.push(new Destination(this.destinations.length, cell, 0));
     },
     
     getCell: function(row, col) {
@@ -86,6 +108,30 @@ Map.prototype = {
         }.bind(this));
     },
     
+    doRound: function() {
+        for(var i in this.agents) {
+            var agent = this.agents[i];
+            if(agent.destinationReached) {
+                this.removeAgent(agent);
+            } else {
+                var freeNeigbourCells = this.getFreeNeighbourCells(agent.cell);
+                var chosenCell = null;
+                var minDist = Number.MAX_VALUE;
+                for(var j in freeNeigbourCells) {
+                    var neighbourCell = freeNeigbourCells[j];
+                    var distToDestination = this.getDistanceBetweenCells(neighbourCell, this.destinations[agent.targetDestinationId].cell);
+                    if (distToDestination < minDist) {
+                        minDist = distToDestination;
+                        chosenCell = neighbourCell;
+                    }
+                }
+                if (chosenCell != null)
+                    this.moveAgent(agent, chosenCell);
+            }
+        }
+        this.draw();
+    },
+    
     getFreeNeighbourCells: function(cell) {
         var freeNeigbourCells = [];
         var dirs = neighbourDirections();
@@ -95,5 +141,29 @@ Map.prototype = {
                 freeNeigbourCells.push(neighbourCell);
         }
         return freeNeigbourCells;
+    },
+    
+    getDistanceBetweenCells: function(cell1, cell2) {
+        return Math.sqrt(Math.pow(cell2.col - cell1.col, 2) + Math.pow(cell2.row - cell1.row, 2));
+    },
+    
+    moveAgent: function(agent, targetCell) {
+        if(targetCell == this.destinations[agent.targetDestinationId].cell)
+            agent.destinationReached = true;
+        agent.cell.type = CellType.FREE;
+        targetCell.type = CellType.AGENT;
+        agent.cell = targetCell;
+    },
+    
+    removeAgent: function(agent) {
+        agent.cell.type = CellType.DESTINATION;
+        var index = this.agents.indexOf(agent);
+        if (index > -1) {
+            this.agents.splice(index, 1);
+        }
+    },
+    
+    hasAgents: function() {
+        return this.agents.length > 0;
     }
 };

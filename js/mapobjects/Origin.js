@@ -1,8 +1,7 @@
 
-var Origin = function(id, cell, addAgentCallback) {
+var Origin = function(id, cell) {
     this.id = id;
     this.cell = cell;
-    this.addAgentCallback = addAgentCallback;
 };
 
 Origin.prototype = {
