@@ -3,7 +3,6 @@
     <head>
         <title>dom-runners</title>
         <script src='js/vendors/html2canvas.js'></script>
-        <!--<script src='http://code.jquery.com/jquery.min.js'></script>-->
         <script src='js/main.js'></script>
         <script src='js/utils.js'></script>
         <script src='js/Map.js'></script>
@@ -12,15 +11,7 @@
         <script src='js/mapobjects/Agent.js'></script>
         <script src='js/mapobjects/Origin.js'></script>
         <script src='js/mapobjects/Destination.js'></script>
-        <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
-        <style>
-            #backgroundCanvas {
-                position: absolute;
-                left: 0;
-                top: 0;
-                z-index: -1;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
     </head>
     <body>
         <div align="center">
@@ -31,18 +22,7 @@
             <hr>
         </div>
         <script>
-        
-        initMap();
-        
-        /*
-        var resizeId;
-        window.onresize = function(event) {
-            clearTimeout(resizeId);
-            resizeId = setTimeout(function() {
-                initMap();
-            }, 200);
-        };
-        */        
+            initMap();
         </script>
     </body>
 </html>

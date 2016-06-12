@@ -13,7 +13,7 @@ Simulation.prototype = {
                 if (self.map.hasAgents()) {
                     loop();
                 } else {
-                    self.finishedCallback();
+                    self.finished();
                 }
             }, 200);
             self.stepcounter ++;
@@ -21,7 +21,7 @@ Simulation.prototype = {
         loop();
     },
     
-    finishedCallback: function() {
+    finished: function() {
         console.log('simulation finished ater ' + this.stepcounter + ' steps');
     }
 };

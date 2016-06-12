@@ -47,24 +47,38 @@ Map.prototype = {
     },
     
     placeMapObjects: function() {
-        //TODO some clever random mechanism
-        this.addAgent(8, 6);
-        this.addAgent(10, 10);
-        this.addAgent(9, 14);
-        this.addOrigin(4, 6);
-        this.addDestination(17, 16);
+        /*this.addAgent(this.getRandomFreeCell());
+        this.addAgent(this.getRandomFreeCell());
+        this.addAgent(this.getRandomFreeCell());
+        this.addOrigin(this.getRandomFreeCell());
+        this.addDestination(this.getRandomFreeCell());*/
+        this.addAgent(this.getCell(8, 6));
+        this.addAgent(this.getCell(10, 10));
+        this.addAgent(this.getCell(9, 14));
+        this.addOrigin(this.getCell(4, 6));
+        this.addDestination(this.getCell(17, 16));
     },
     
-    addAgent: function(row, col) {
-        this.agents.push(new Agent(this.agents.length, this.getCell(row, col), 0));
+    getRandomFreeCell: function() {
+        var freeCells = [];
+        for(var i in this.cells) {
+            var cell = this.cells[i];
+            if(cell.type == CellType.FREE)
+                freeCells.push(cell);
+        }
+        return freeCells[Math.floor(Math.random() * freeCells.length)];
     },
     
-    addOrigin: function(row, col) {
-        this.origins.push(new Origin(this.destinations.length, this.getCell(row, col), 5, 0));
+    addAgent: function(cell) {
+        this.agents.push(new Agent(this.agents.length, cell, 0));
     },
     
-    addDestination: function(row, col) {
-        this.destinations.push(new Destination(this.destinations.length, this.getCell(row, col)));
+    addOrigin: function(cell) {
+        this.origins.push(new Origin(this.destinations.length, cell, 5, 0));
+    },
+    
+    addDestination: function(cell) {
+        this.destinations.push(new Destination(this.destinations.length, cell));
     },
     
     getCell: function(row, col) {
