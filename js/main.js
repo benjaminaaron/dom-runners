@@ -29,6 +29,7 @@ function initMap() {
 
             map = new Map(cellsize, rows, cols, imgData, ctx);
             simulation = new Simulation(map);
+            simulation.start();
         }
     });
 }

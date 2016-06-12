@@ -1,5 +1,6 @@
 
-var Origin = function(cell, addAgentCallback) {
+var Origin = function(id, cell, addAgentCallback) {
+    this.id = id;
     this.cell = cell;
     this.addAgentCallback = addAgentCallback;
 };

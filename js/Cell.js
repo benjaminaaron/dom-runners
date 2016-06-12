@@ -16,5 +16,9 @@ Cell.prototype = {
     draw: function(ctx) {
         ctx.fillStyle = getCellColor(this.type);
         ctx.fillRect(this.x, this.y, this.cellsize, this.cellsize);
+    },
+    
+    isWalkable: function() {
+        return this.type != CellType.OBSTACLE && this.type != CellType.AGENT;
     }
 };

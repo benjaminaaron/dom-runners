@@ -7,7 +7,7 @@ var Map = function(cellsize, rows, cols, imgData, ctx) {
     
     this.ctx = ctx;
     this.initCells(imgData);
-    this.placeOriginsAndDestinations();
+    this.placeMapObjects();
     this.draw();
 };
 
@@ -42,13 +42,18 @@ Map.prototype = {
         }
     },
     
-    placeOriginsAndDestinations: function() {
+    placeMapObjects: function() {
         //TODO some clever random mechanism
+        this.getCell(8, 6).type = CellType.AGENT;
+        this.getCell(10, 10).type = CellType.AGENT;
+        this.getCell(9, 14).type = CellType.AGENT;
         this.getCell(4, 6).type = CellType.ORIGIN;
         this.getCell(17, 16).type = CellType.DESTINATION;
     },
     
     getCell: function(row, col) {
+        if(row < 0 || row >= this.rows.length || col < 0 || col >= this.cols.length)
+            return null;
         return this.cells[this.cols * row + col];
     },
     
@@ -79,5 +84,16 @@ Map.prototype = {
         this.loopTroughCells(function(row, col) {
             this.getCell(row, col).draw(ctx);
         }.bind(this));
+    },
+    
+    getFreeNeighbourCells: function(cell) {
+        var freeNeigbourCells = [];
+        var dirs = neighbourDirections();
+        for(var i in dirs) {
+            var neighbourCell = this.getCell(cell.row + dirs[i][0], cell.col + dirs[i][1]);
+            if(neighbourCell != null && neighbourCell.isWalkable())
+                freeNeigbourCells.push(neighbourCell);
+        }
+        return freeNeigbourCells;
     }
 };
