@@ -1,5 +1,7 @@
 
 var cellsize = 20;
+var simStepPause = 100; // ms
+
 
 function initMap() {
     var oldCanvas = document.getElementById('backgroundCanvas');

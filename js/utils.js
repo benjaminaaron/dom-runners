@@ -34,3 +34,15 @@ function neighbourDirections(){ // row/col
         [-1, -1]  // northwest
     ];
 }
+
+function getRandomIndex(array) {
+    return Math.floor(Math.random() * array.length);
+}
+
+function getRandomElement(array) {
+    return array[getRandomIndex(array)];
+}
+
+function getRandomIntBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min); // via stackoverflow.com/a/7228322
+}

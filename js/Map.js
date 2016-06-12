@@ -11,7 +11,12 @@ var Map = function(cellsize, rows, cols, imgData, ctx) {
     
     this.ctx = ctx;
     this.initCells(imgData);
+    
+    this.freeCells = [];
+    this.collectFreeCells();
+    
     this.placeMapObjects();
+    
     this.draw();
 };
 
@@ -47,38 +52,67 @@ Map.prototype = {
     },
     
     placeMapObjects: function() {
-        /*this.addAgent(this.getRandomFreeCell());
-        this.addAgent(this.getRandomFreeCell());
-        this.addAgent(this.getRandomFreeCell());
-        this.addOrigin(this.getRandomFreeCell());
-        this.addDestination(this.getRandomFreeCell());*/
-        this.addAgent(this.getCell(8, 6));
+        var agents = 10;
+        var origins = 3;
+        var destinations = 2;
+        
+        // agents
+        for(var i = 0; i < agents; i ++)
+            this.addRandomAgent();
+        
+        // origins
+        for(var i = 0; i < origins; i ++)
+            this.addRandomOrigin();
+        
+        // destinations
+        for(var i = 0; i < destinations; i ++)
+            this.addRandomDestination();
+        
+        var destinationIDs = Array.apply(null, {length: this.destinations.length}).map(Number.call, Number); // via stackoverflow.com/a/20066663
+        this.wireAgentsToDestinations(destinationIDs);
+        this.configureOrigins(destinationIDs, 5, 10);
+        
+        /*this.addAgent(this.getCell(8, 6));
         this.addAgent(this.getCell(10, 10));
         this.addAgent(this.getCell(9, 14));
         this.addOrigin(this.getCell(4, 6));
-        this.addDestination(this.getCell(17, 16));
+        this.addDestination(this.getCell(17, 16));*/
     },
     
-    getRandomFreeCell: function() {
-        var freeCells = [];
+    collectFreeCells: function() {
         for(var i in this.cells) {
             var cell = this.cells[i];
             if(cell.type == CellType.FREE)
-                freeCells.push(cell);
+                this.freeCells.push(cell);
         }
-        return freeCells[Math.floor(Math.random() * freeCells.length)];
     },
     
-    addAgent: function(cell) {
-        this.agents.push(new Agent(this.agents.length, cell, 0));
+    getRandomFreeCell: function() {
+        return this.freeCells.splice(getRandomIndex(this.freeCells), 1)[0];
     },
     
-    addOrigin: function(cell) {
-        this.origins.push(new Origin(this.destinations.length, cell, 5, 0));
+    addRandomAgent: function(cell) {
+        this.agents.push(new Agent(this.agents.length, this.getRandomFreeCell()));
     },
     
-    addDestination: function(cell) {
-        this.destinations.push(new Destination(this.destinations.length, cell));
+    addRandomOrigin: function(cell) {
+        this.origins.push(new Origin(this.destinations.length, this.getRandomFreeCell()));
+    },
+    
+    addRandomDestination: function(cell) {
+        this.destinations.push(new Destination(this.destinations.length, this.getRandomFreeCell()));
+    },
+    
+    wireAgentsToDestinations: function(destinationIDs) {
+        for(var i in this.agents)
+            this.agents[i].targetDestinationId = getRandomElement(destinationIDs);
+    },
+    
+    configureOrigins: function(destinationIDs, minSpawnLimit, maxSpawnLimit) {
+        for(var i in this.origins) {
+            this.origins[i].spawnLimit = getRandomIntBetween(minSpawnLimit, maxSpawnLimit);
+            this.origins[i].possibleTargetDestinationIDs = destinationIDs; // TODO allow (random) subsets of that
+        }
     },
     
     getCell: function(row, col) {
@@ -175,11 +209,8 @@ Map.prototype = {
     },
     
     removeAgent: function(agent) {
-        var index = this.agents.indexOf(agent);
-        if (index > -1) {
-            agent.cell.type = CellType.DESTINATION;
-            this.agents.splice(index, 1);
-        }
+        agent.cell.type = CellType.DESTINATION;
+        this.agents.splice(this.agents.indexOf(agent), 1);
     },
     
     hasAgents: function() {

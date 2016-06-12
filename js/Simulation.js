@@ -15,7 +15,7 @@ Simulation.prototype = {
                 } else {
                     self.finished();
                 }
-            }, 200);
+            }, simStepPause);
             self.stepcounter ++;
         }
         loop();
