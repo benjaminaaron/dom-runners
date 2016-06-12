@@ -56,21 +56,15 @@ Map.prototype = {
     },
     
     addAgent: function(row, col) {
-        var cell = this.getCell(row, col);
-        cell.type = CellType.AGENT;
-        this.agents.push(new Agent(this.agents.length, cell, 0));
+        this.agents.push(new Agent(this.agents.length, this.getCell(row, col), 0));
     },
     
     addOrigin: function(row, col) {
-        var cell = this.getCell(row, col);
-        cell.type = CellType.ORIGIN;
-        this.origins.push(new Origin(this.destinations.length, cell, 5, 0));
+        this.origins.push(new Origin(this.destinations.length, this.getCell(row, col), 5, 0));
     },
     
     addDestination: function(row, col) {
-        var cell = this.getCell(row, col);
-        cell.type = CellType.DESTINATION;
-        this.destinations.push(new Destination(this.destinations.length, cell));
+        this.destinations.push(new Destination(this.destinations.length, this.getCell(row, col)));
     },
     
     getCell: function(row, col) {
@@ -109,31 +103,32 @@ Map.prototype = {
     },
     
     oneRound: function() {
+        // origins
         for(var i in this.origins) {
             var origin = this.origins[i];
             var spawnedAgent = origin.chanceToSpawnAgent(this.agents.length);
             if(spawnedAgent != null)
                 this.agents.push(spawnedAgent);
         }
-        
+        // agents
         for(var i in this.agents) {
             var agent = this.agents[i];
-            if (agent.destinationReached) {
-                this.removeAgent(agent);
-            } else {
+            if (!agent.destinationReached) {
                 var freeNeigbourCells = this.getFreeNeighbourCells(agent.cell);
                 var chosenCell = null;
                 var minDist = Number.MAX_VALUE;
                 for(var j in freeNeigbourCells) {
                     var neighbourCell = freeNeigbourCells[j];
-                    var distToDestination = this.getDistanceBetweenCells(neighbourCell, this.destinations[agent.targetDestinationId].cell);
-                    if (distToDestination < minDist) {
-                        minDist = distToDestination;
+                    var distToTargetDestination = this.getDistanceBetweenCells(neighbourCell, this.destinations[agent.targetDestinationId].cell);
+                    if (distToTargetDestination < minDist) {
+                        minDist = distToTargetDestination;
                         chosenCell = neighbourCell;
                     }
                 }
-                if (chosenCell != null)
+                if (chosenCell != null) // if the agent is surrounded by non-walkable cells
                     this.moveAgent(agent, chosenCell);
+            } else {
+                this.removeAgent(agent);
             }
         }
         this.draw();
@@ -164,9 +159,9 @@ Map.prototype = {
     },
     
     removeAgent: function(agent) {
-        agent.cell.type = CellType.DESTINATION;
         var index = this.agents.indexOf(agent);
         if (index > -1) {
+            agent.cell.type = CellType.DESTINATION;
             this.agents.splice(index, 1);
         }
     },
