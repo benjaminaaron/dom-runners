@@ -64,13 +64,13 @@ Map.prototype = {
     addOrigin: function(row, col) {
         var cell = this.getCell(row, col);
         cell.type = CellType.ORIGIN;
-        this.origins.push(new Origin(this.destinations.length, cell, 0));
+        this.origins.push(new Origin(this.destinations.length, cell, 5, 0));
     },
     
     addDestination: function(row, col) {
         var cell = this.getCell(row, col);
         cell.type = CellType.DESTINATION;
-        this.destinations.push(new Destination(this.destinations.length, cell, 0));
+        this.destinations.push(new Destination(this.destinations.length, cell));
     },
     
     getCell: function(row, col) {
@@ -108,10 +108,17 @@ Map.prototype = {
         }.bind(this));
     },
     
-    doRound: function() {
+    oneRound: function() {
+        for(var i in this.origins) {
+            var origin = this.origins[i];
+            var spawnedAgent = origin.chanceToSpawnAgent(this.agents.length);
+            if(spawnedAgent != null)
+                this.agents.push(spawnedAgent);
+        }
+        
         for(var i in this.agents) {
             var agent = this.agents[i];
-            if(agent.destinationReached) {
+            if (agent.destinationReached) {
                 this.removeAgent(agent);
             } else {
                 var freeNeigbourCells = this.getFreeNeighbourCells(agent.cell);
@@ -150,7 +157,8 @@ Map.prototype = {
     moveAgent: function(agent, targetCell) {
         if(targetCell == this.destinations[agent.targetDestinationId].cell)
             agent.destinationReached = true;
-        agent.cell.type = CellType.FREE;
+        agent.cell.type = agent.cellTypeOccupying; // restore the cell we stayed on
+        agent.cellTypeOccupying = targetCell.type;
         targetCell.type = CellType.AGENT;
         agent.cell = targetCell;
     },

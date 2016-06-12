@@ -9,7 +9,7 @@ Simulation.prototype = {
         var self = this;
         function loop () {
             setTimeout(function () {
-                self.map.doRound();
+                self.map.oneRound();
                 if (self.map.hasAgents()) {
                     loop();
                 } else {

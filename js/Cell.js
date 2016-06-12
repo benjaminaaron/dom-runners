@@ -6,6 +6,8 @@ var Cell = function(row, col, cellsize, type) {
     this.y = row * cellsize;
     this.cellsize = cellsize;
     this.type = type;
+    
+    this.isOccupied = false; // by an agent
 };
 
 Cell.prototype = {
