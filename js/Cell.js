@@ -20,6 +20,6 @@ Cell.prototype = {
     },
     
     isWalkable: function() {
-        return this.type != CellType.OBSTACLE && this.type != CellType.AGENT;
+        return this.type != CellType.OBSTACLE && this.type != CellType.TEMPOBSTACLE && this.type != CellType.AGENT;
     }
 };

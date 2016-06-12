@@ -1,6 +1,8 @@
 
-var cellsize = 20;
+var cellsize = 10;
 var simStepPause = 100; // ms
+
+var debugMode = false;
 
 
 function initMap() {
@@ -30,6 +32,10 @@ function initMap() {
             var map = new Map(rows, cols, imgData, ctx);
             var simulation = new Simulation(map);
             simulation.start();
+            
+            document.onmousemove = function (event) {
+                map.updateMousePos(event.pageX, event.pageY);
+            }
         }
     });
 }

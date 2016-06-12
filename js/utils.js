@@ -2,9 +2,10 @@
 var CellType = {
     FREE: 0,
     OBSTACLE: 1,
-    ORIGIN: 2,
-    DESTINATION: 3,
-    AGENT: 4
+    TEMPOBSTACLE: 2,
+    ORIGIN: 3,
+    DESTINATION: 4,
+    AGENT: 5
 };
 
 function getCellColor(type) {
@@ -12,9 +13,11 @@ function getCellColor(type) {
         case CellType.FREE:
             return '#FFF';
         case CellType.OBSTACLE:
-            return '#CCC';
+            return debugMode ? '#CCC' : '#FFF';
+        case CellType.TEMPOBSTACLE:
+            return debugMode ? '#AAA' : '#FFF';
         case CellType.ORIGIN:
-            return '#FFFF00';
+            return '#00FF00';
         case CellType.DESTINATION:
             return '#FF0000';
         case CellType.AGENT:

@@ -16,6 +16,8 @@ var Map = function(rows, cols, imgData, ctx) {
     
     this.placeMapObjects();
     
+    this.lastMouseCell = null;
+    
     this.draw();
 };
 
@@ -122,7 +124,8 @@ Map.prototype = {
     
     draw() {
         this.drawCells(this.ctx);
-        this.drawGrid(this.ctx);
+        if (debugMode)
+            this.drawGrid(this.ctx);
     },
     
     drawGrid: function(ctx) {
@@ -163,7 +166,9 @@ Map.prototype = {
         for(var i in this.agents) {
             var agent = this.agents[i];
             if (!agent.destinationReached) {
-                var freeNeigbourCells = this.getFreeNeighbourCells(agent.cell);
+                var freeNeigbourCells = this.getNeighbourCells(agent.cell, function(cell) {
+                    return cell.isWalkable();
+                });
                 var chosenCell = null;
                 var minDist = Number.MAX_VALUE;
                 for(var j in freeNeigbourCells) {
@@ -183,12 +188,12 @@ Map.prototype = {
         this.draw();
     },
     
-    getFreeNeighbourCells: function(cell) {
+    getNeighbourCells: function(cell, callback) {
         var freeNeigbourCells = [];
         var dirs = neighbourDirections();
         for(var i in dirs) {
             var neighbourCell = this.getCell(cell.row + dirs[i][0], cell.col + dirs[i][1]);
-            if(neighbourCell != null && neighbourCell.isWalkable())
+            if(neighbourCell != null && callback(neighbourCell))
                 freeNeigbourCells.push(neighbourCell);
         }
         return freeNeigbourCells;
@@ -214,5 +219,34 @@ Map.prototype = {
     
     hasAgents: function() {
         return this.agents.length > 0;
+    },
+    
+    updateMousePos: function(x, y) {
+        var mouseCell = this.getCell(Math.floor(y / cellsize), Math.floor(x / cellsize));
+        if (this.lastMouseCell != mouseCell) {
+            if(this.lastMouseCell != null) {
+                var oldCluster = this.getCluster(this.lastMouseCell);
+                this.convertCluster(oldCluster, CellType.TEMPOBSTACLE, CellType.FREE);
+            }
+            var newCluster = this.getCluster(mouseCell);
+            this.convertCluster(newCluster, CellType.FREE, CellType.TEMPOBSTACLE);
+            
+            this.lastMouseCell = mouseCell;
+        }
+    },
+    
+    getCluster(coreCell) {
+        var cluster = this.getNeighbourCells(coreCell, function(cell) {return true;});
+        cluster.push(coreCell);
+        return cluster;
+    },
+        
+    convertCluster: function(cluster, from, to) {
+        for(var i in cluster) {
+            var cell = cluster[i];
+            if(cell.type == from)
+                cell.type = to;
+        }
     }
+   
 };
