@@ -27,7 +27,7 @@ function initMap() {
             var rows = Math.floor(canvas.height / cellsize);
             var cols = Math.floor(canvas.width / cellsize);
 
-            var map = new Map(cellsize, rows, cols, imgData, ctx);
+            var map = new Map(rows, cols, imgData, ctx);
             var simulation = new Simulation(map);
             simulation.start();
         }

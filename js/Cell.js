@@ -1,10 +1,9 @@
 
-var Cell = function(row, col, cellsize, type) {
+var Cell = function(row, col, type) {
     this.row = row;
     this.col = col;
     this.x = col * cellsize;
     this.y = row * cellsize;
-    this.cellsize = cellsize;
     this.type = type;
     
     this.isOccupied = false; // by an agent
@@ -17,7 +16,7 @@ Cell.prototype = {
 
     draw: function(ctx) {
         ctx.fillStyle = getCellColor(this.type);
-        ctx.fillRect(this.x, this.y, this.cellsize, this.cellsize);
+        ctx.fillRect(this.x, this.y, cellsize, cellsize);
     },
     
     isWalkable: function() {

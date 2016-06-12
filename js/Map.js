@@ -1,6 +1,5 @@
 
-var Map = function(cellsize, rows, cols, imgData, ctx) {
-    this.cellsize = cellsize;
+var Map = function(rows, cols, imgData, ctx) {
     this.rows = rows;
     this.cols = cols;
     this.cells = [];
@@ -24,16 +23,16 @@ Map.prototype = {
     initCells: function(imgData) {
         this.loopTroughCells(function(row, col) {
             var cellType = this.hasOnlyWhitePixels(row, col, imgData) ? CellType.FREE : CellType.OBSTACLE;
-            this.cells.push(new Cell(row, col, this.cellsize, cellType));
+            this.cells.push(new Cell(row, col, cellType));
         }.bind(this));
     },
     
     hasOnlyWhitePixels: function(row, col, imgData) { // imgData.data is a 1-dim-array (rows next to each other) of the pixels, where each pixel has 4 entries (rgba)
-        var yStart = row * this.cellsize;
-        var yEnd = yStart + this.cellsize;
+        var yStart = row * cellsize;
+        var yEnd = yStart + cellsize;
         for(var y = yStart; y < yEnd; y ++) {
-            var indexStart = 4 * (y * imgData.width + col * this.cellsize);
-            var indexEnd = indexStart + 4 * this.cellsize;
+            var indexStart = 4 * (y * imgData.width + col * cellsize);
+            var indexEnd = indexStart + 4 * cellsize;
             for(var index = indexStart; index < indexEnd; index += 2 * 4) {
                 if (imgData.data[index + 3] != 0) { // only check the alpha-value
                     return false;
