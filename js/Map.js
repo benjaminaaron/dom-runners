@@ -10,8 +10,9 @@ var Map = function(cellsize, rows, cols) {
 Map.prototype = {
     initCells: function(imgData) {
         this.loopTroughCells(function(row, col) {
-            this.cells.push(new Cell(row, col, this.cellsize, this.hasOnlyWhitePixels(row, col, imgData)));
-       }.bind(this));
+            var cellType = this.hasOnlyWhitePixels(row, col, imgData) ? CellType.FREE : CellType.OBSTACLE;
+            this.cells.push(new Cell(row, col, this.cellsize, cellType));
+        }.bind(this));
     },
     
     hasOnlyWhitePixels: function(row, col, imgData) { // imgData.data is a 1-dim-array (rows next to each other) of the pixels, where each pixel has 4 entries (rgba)
@@ -60,7 +61,6 @@ Map.prototype = {
    },
    
    drawCells: function(ctx) {
-       ctx.fillStyle = "#FFFF00";
        this.loopTroughCells(function(row, col) {
            this.getCell(row, col).draw(ctx);
       }.bind(this));

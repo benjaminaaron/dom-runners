@@ -1,9 +1,11 @@
 
-var Cell = function(row, col, cellsize, isFree) {
+var Cell = function(row, col, cellsize, type) {
     this.row = row;
     this.col = col;
+    this.x = col * cellsize;
+    this.y = row * cellsize;
     this.cellsize = cellsize;
-    this.isFree = isFree;
+    this.type = type;
 };
 
 Cell.prototype = {
@@ -12,10 +14,7 @@ Cell.prototype = {
     },
 
     draw: function(ctx) {
-        if (this.isFree) {
-            var x = this.col * this.cellsize;
-            var y = this.row * this.cellsize;
-            ctx.fillRect(x, y, this.cellsize, this.cellsize);
-        }
+        ctx.fillStyle = getCellColor(this.type);
+        ctx.fillRect(this.x, this.y, this.cellsize, this.cellsize);
     }
 };
