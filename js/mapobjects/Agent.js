@@ -1,5 +1,6 @@
 
-var Agent = function() {
+var Agent = function(cell) {
+    this.cell = cell;
 
 };
 

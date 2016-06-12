@@ -1,4 +1,7 @@
 
+var cellsize = 20;
+var map, simulation;
+
 function initMap() {
     
     var oldCanvas = document.getElementById('backgroundCanvas');
@@ -12,7 +15,7 @@ function initMap() {
             //document.body.appendChild(canvas);
             var imgData = canvasRet.getContext('2d').getImageData(0, 0, canvasRet.width, canvasRet.height);
             
-            canvas = document.createElement('canvas');
+            var canvas = document.createElement('canvas');
             canvas.id = 'backgroundCanvas';
             canvas.width = imgData.width;
             canvas.height = imgData.height;
@@ -25,6 +28,7 @@ function initMap() {
             var cols = Math.floor(canvas.width / cellsize);
 
             map = new Map(cellsize, rows, cols, imgData, ctx);
+            simulation = new Simulation(map);
         }
     });
 }
