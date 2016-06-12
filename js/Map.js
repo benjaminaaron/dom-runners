@@ -1,10 +1,14 @@
 
-var Map = function(cellsize, rows, cols) {
+var Map = function(cellsize, rows, cols, imgData, ctx) {
     this.cellsize = cellsize;
-    this.canvas = canvas;
     this.rows = rows;
     this.cols = cols;
     this.cells = [];
+    
+    this.ctx = ctx;
+    this.initCells(imgData);
+    this.placeOriginsAndDestinations();
+    this.draw();
 };
 
 Map.prototype = {
@@ -38,6 +42,21 @@ Map.prototype = {
         }
     },
     
+    placeOriginsAndDestinations: function() {
+        //TODO some clever random mechanism
+        this.getCell(4, 6).type = CellType.ORIGIN;
+        this.getCell(17, 16).type = CellType.DESTINATION;
+    },
+    
+    getCell: function(row, col) {
+        return this.cells[this.cols * row + col];
+    },
+    
+    draw() {
+        this.drawCells(this.ctx);
+        this.drawGrid(this.ctx);
+    },
+    
     drawGrid: function(ctx) {
         ctx.strokeStyle = "#999999";
         var width = this.cols * cellsize;
@@ -56,18 +75,9 @@ Map.prototype = {
         }
     },
    
-    getCell: function(row, col) {
-        return this.cells[this.cols * row + col];
-    },
-   
     drawCells: function(ctx) {
         this.loopTroughCells(function(row, col) {
             this.getCell(row, col).draw(ctx);
         }.bind(this));
-    },
-    
-    placeOriginsAndDestinations: function() {
-        this.getCell(4, 6).type = CellType.ORIGIN;
-        this.getCell(17, 16).type = CellType.DESTINATION;
     }
 };
